@@ -4,6 +4,10 @@ move(){
 	FILETEMP="$FILE";
 	if [ "${FILETEMP:0:1}" != "*" ]; then
 		TARGET=$TYPE
+		if [ -f "$FILE.part" ]; then
+			echo "Download of file \"$FILE\" seems to be active. It will be moved to $TARGET when it will be over."
+			return
+		fi
 		mkdir -p $TARGET
 		echo "File $FILE will be moved in $TARGET"
 		mv -b "$FILE" "$TARGET/$FILE"
@@ -17,52 +21,56 @@ while [ 1 ]; do
 
 # Documents
 for FILE in *.doc *.docx *.html *.odt *.odp *.odg *.pdf *.ppt *.pptx; do
-	TYPE=Documents
+	TYPE="Documents"
 	move
 done 
 
 # Images
 for FILE in *.png *.jpg *.svg *.xcf *.bmp *.tif; do
-	TYPE=Images
+	TYPE="Images"
 	move
 done 
 
 # Videos
 for FILE in *.mov *.mkv *.avi *.mp4; do
-	TYPE=Vidéos
+	TYPE="Vidéos"
 	move
 done 
 
 # Archive
 for FILE in *.7z *.rar *.tar *.tar.gz *.tar.xz *.zip *.deb; do
-	TYPE=Archives
+	TYPE="Archives"
 	move
 done 
 
 # Score
 for FILE in *.mscz; do
-	TYPE=Partitions
+	TYPE="Partitions"
 	move
 done 
 
 # Windows Stuff
 for FILE in *.dll *.bat *.exe; do
-	TYPE=Windows
+	TYPE="Windows"
 	move
 done 
 
 # Torrent
 for FILE in *.torrent; do
-	TYPE=Torrents
+	TYPE="Torrents"
 	move
 done 
 
 # Raw
-for FILE in *.o *.bin *.apk; do
-	TYPE=Binaries
+for FILE in *.o *.bin *.apk *.jar; do
+	TYPE="Binaries"
 	move
 done
 
+for FILE in *.c *.cpp *.cs *.h *.hpp *.sh *.txt; do
+	TYPE="Raw Text"
+	move
+done
 sleep 10
 
 done
