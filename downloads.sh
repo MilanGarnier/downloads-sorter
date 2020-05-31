@@ -10,14 +10,19 @@ move(){
 		fi
 		mkdir -p $TARGET
 		echo "File $FILE will be moved in $TARGET"
+		FILE_LIST+=" $FILE"
+		MOVE_COUNT+=1
 		mv -b "$FILE" "$TARGET/$FILE"
 		echo "Moved file"
 	fi
 }
 
-cd $HOME/Téléchargements
+cd $HOME/Téléchargements || cd $HOME/Downloads
 
 while [ 1 ]; do  
+
+FILE_LIST=" "
+MOVE_COUNT=0
 
 # Documents
 for FILE in *.doc *.docx *.html *.odt *.odp *.odg *.pdf *.ppt *.pptx; do
@@ -71,6 +76,14 @@ for FILE in *.c *.cpp *.cs *.h *.hpp *.sh *.txt; do
 	TYPE="Raw Text"
 	move
 done
-sleep 10
+
+if [ $MOVE_COUNT != 0 ]; then
+	OUTPUT="Moved"
+	OUTPUT+=$FILE_LIST
+	OUTPUT+="."
+	notify-send "$OUTPUT"
+fi
+
+sleep 3
 
 done
